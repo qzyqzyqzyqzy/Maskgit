@@ -14,14 +14,19 @@ Just run training_vqgan.py. Then you should change the args in training_transfor
 In training_vqgan.py:
 
 batch_size
+
 epochs
+
 disc_start:it means when we start use the discriminator. If it is too small the decoder is too poor and the training will be useless. If it is too large, the training may not get good results.
 
 In training_transformer.py:
 
 batch_size
+
 epochs
+
 temperature:it means the random degree when sampling
+
 top_k:it means the model's freedom when sampling, so it can't be too small or too big.
 
 In encoder.py and decoder.py:
