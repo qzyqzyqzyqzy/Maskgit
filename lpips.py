@@ -1,40 +1,40 @@
 import os
 import torch
 import torch.nn as nn
-from torchvision.models import vgg16,VGG16_Weights
+from torchvision.models import vgg16, VGG16_Weights
 from collections import namedtuple
 import requests
 from tqdm import tqdm
 
 
-URL_MAP = {
-    "vgg_lpips": "https://heibox.uni-heidelberg.de/f/607503859c864bc1b30b/?dl=1"
-}
+# URL_MAP = {
+#     "vgg_lpips": "https://heibox.uni-heidelberg.de/f/607503859c864bc1b30b/?dl=1"
+# }
 
-CKPT_MAP = {
-    "vgg_lpips": "vgg.pth"
-}
-
-
-def download(url, local_path, chunk_size=1024):
-    os.makedirs(os.path.split(local_path)[0], exist_ok=True)
-    with requests.get(url, stream=True) as r:
-        total_size = int(r.headers.get("content-length", 0))
-        with tqdm(total=total_size, unit="B", unit_scale=True) as pbar:
-            with open(local_path, "wb") as f:
-                for data in r.iter_content(chunk_size=chunk_size):
-                    if data:
-                        f.write(data)
-                        pbar.update(chunk_size)
+# CKPT_MAP = {
+#     "vgg_lpips": "vgg.pth"
+# }
 
 
-def get_ckpt_path(name, root):
-    assert name in URL_MAP
-    path = os.path.join(root, CKPT_MAP[name])
-    if not os.path.exists(path):
-        print(f"Downloading {name} model from {URL_MAP[name]} to {path}")
-        download(URL_MAP[name], path)
-    return path
+# def download(url, local_path, chunk_size=1024):
+#     os.makedirs(os.path.split(local_path)[0], exist_ok=True)
+#     with requests.get(url, stream=True) as r:
+#         total_size = int(r.headers.get("content-length", 0))
+#         with tqdm(total=total_size, unit="B", unit_scale=True) as pbar:
+#             with open(local_path, "wb") as f:
+#                 for data in r.iter_content(chunk_size=chunk_size):
+#                     if data:
+#                         f.write(data)
+#                         pbar.update(chunk_size)
+
+
+# def get_ckpt_path(name, root):
+#     assert name in URL_MAP
+#     path = os.path.join(root, CKPT_MAP[name])
+#     if not os.path.exists(path):
+#         print(f"Downloading {name} model from {URL_MAP[name]} to {path}")
+#         download(URL_MAP[name], path)
+#     return path
 
 
 class LPIPS(nn.Module):
@@ -51,14 +51,15 @@ class LPIPS(nn.Module):
             NetLinLayer(self.channels[4])
         ])
 
-        self.load_from_pretrained()
-
+        #self.load_from_pretrained()
+        self.load_state_dict(torch.load('vgg.pth', map_location=torch.device("cpu")), strict=False)
         for param in self.parameters():
             param.requires_grad = False
 
-    def load_from_pretrained(self, name="vgg_lpips"):
-        ckpt = get_ckpt_path(name, "vgg_lpips")
-        self.load_state_dict(torch.load(ckpt, map_location=torch.device("cpu")), strict=False)
+    # def load_from_pretrained(self, name="vgg_lpips"):
+    #     ckpt = get_ckpt_path(name, "vgg_lpips")
+    #     print(ckpt)
+    #     self.load_state_dict(torch.load(ckpt, map_location=torch.device("cpu")), strict=False)
 
     def forward(self, real_x, fake_x):
         features_real = self.vgg(self.scaling_layer(real_x))
