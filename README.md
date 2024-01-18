@@ -17,11 +17,14 @@ batch_size
 epochs
 disc_start:it means when we start use the discriminator. If it is too small the decoder is too poor and the training will be useless. If it is too large, the training may not get good results.
 
-In training_transformer:
+In training_transformer.py:
 
 batch_size
 epochs
 temperature:it means the random degree when sampling
 top_k:it means the model's freedom when sampling, so it can't be too small or too big.
 
+In encoder.py and decoder.py:
+
+The list of channels in init() can be changed. But put this change at the last.(if not necessary, don't need to change it)
 
