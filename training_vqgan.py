@@ -46,8 +46,6 @@ class TrainVQGAN:
             with tqdm(range(steps_per_epoch)) as pbar:
                 for i, img in zip(pbar, train_dataset):
                     imgs=img[0]
-                    if i>2:
-                        break
                     imgs = imgs.to(device=args.device)
                     decoded_images, _, q_loss = self.vqgan(imgs)
                     disc_real = self.discriminator(imgs)
