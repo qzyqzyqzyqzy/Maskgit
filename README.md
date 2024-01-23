@@ -3,7 +3,7 @@ download the code and follow the next steps:
 
 1.prepare data
 
-Download tiny-imagenet-200 and unzip it. Change the data path in utils.py. Notice that we only use train data here. Then run the processdata.py and you will get two folder 'owndataset1' and 'owndataset2', and there just one class in them with 100000 64*64 and 50000 32*32 images.
+Download tiny-imagenet-200 and unzip it. Change the data path in processdata.py. Notice that we only use train data here. Then run the processdata.py and you will get two folder 'owndataset1' and 'owndataset2', and there just one class in them with 100000 64*64 and 50000 32*32 images.
 
 2.train 
 
